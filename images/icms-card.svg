@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="ICMS project cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="1020" cy="120" r="160" fill="#60a5fa" opacity="0.22"/>
+  <circle cx="170" cy="680" r="220" fill="#22d3ee" opacity="0.18"/>
+  <rect x="110" y="180" width="980" height="430" rx="28" fill="url(#panel)" stroke="#bae6fd" stroke-opacity="0.3"/>
+  <text x="165" y="300" fill="#e0f2fe" font-size="36" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">HEALTH INSURANCE</text>
+  <text x="165" y="390" fill="#ffffff" font-size="78" font-weight="700" font-family="Arial, Helvetica, sans-serif">ICMS</text>
+  <text x="165" y="460" fill="#dbeafe" font-size="40" font-family="Arial, Helvetica, sans-serif">Integrated Claims Management System</text>
+  <text x="165" y="540" fill="#bae6fd" font-size="30" font-family="Arial, Helvetica, sans-serif">Preauth, Claims, Portal Integrations, Secure APIs</text>
+</svg>
