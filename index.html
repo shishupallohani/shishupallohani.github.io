@@ -1145,11 +1145,27 @@
         padding-top: 80px;
       }
     }
+
+    #progressBar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      z-index: 9999;
+      background: linear-gradient(90deg, var(--amber), var(--violet), var(--teal));
+      width: 0%;
+      transition: width .08s linear;
+      box-shadow: 0 0 12px rgba(255, 180, 84, .3);
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- ============ SCROLL PROGRESS BAR (YAHAN DAALO) ============ -->
+  <div id="progressBar"></div>
+
+  <!-- ============ THEME TOGGLE ============ -->
   <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></div>
 
   <!-- ============ PAGE 1 : LANDING ============ -->
@@ -1648,6 +1664,12 @@
 
       sections.forEach(s => observer.observe(s));
     }
+
+    window.addEventListener('scroll',()=>{
+  const s=window.scrollY,
+        h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progressBar').style.width=(h>0?(s/h)*100:0)+'%';
+});
   </script>
 </body>
 
