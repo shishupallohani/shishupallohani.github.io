@@ -12,6 +12,8 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- EmailJS — powers the contact form without needing a backend server -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <style>
     /* ============ TOKENS ============ */
@@ -394,13 +396,7 @@
       /* ===== NEON GLOW ON RING ===== */
       filter: drop-shadow(0 0 6px rgba(255, 180, 84, 0.4));
     }
-
-    .avatar-hex:hover {
-      box-shadow:
-        0 0 12px var(--amber),
-        0 0 35px rgba(255, 180, 84, 0.4),
-        inset 0 0 12px rgba(255, 180, 84, 0.25);
-    }
+    
 
     @keyframes spinSlow {
       to {
@@ -1088,6 +1084,201 @@
       background: var(--teal);
     }
 
+    /* ---- NEW: contact form ---- */
+    .contact-form-card {
+      margin-top: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      max-width: 560px;
+    }
+
+    .contact-form-card .form-hint {
+      color: var(--text-dim);
+      font-size: .9rem;
+      margin-bottom: 18px;
+    }
+
+    .form-row {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-row label {
+      font-size: 11px;
+      letter-spacing: .08em;
+      color: var(--teal);
+    }
+
+    .form-row input,
+    .form-row textarea {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 13px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: .94rem;
+      resize: vertical;
+      transition: border-color .2s ease;
+    }
+
+    .form-row input:focus,
+    .form-row textarea:focus {
+      outline: none;
+      border-color: var(--amber);
+    }
+
+    .form-status {
+      margin-top: 12px;
+      font-size: 12px;
+      min-height: 1.2em;
+    }
+
+    .form-status.ok {
+      color: var(--teal);
+    }
+
+    .form-status.err {
+      color: var(--red);
+    }
+
+    /* ---- NEW: floating FAQ chatbot ---- */
+    .chat-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 600;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--amber), var(--violet));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0a0a12;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, .35);
+      transition: transform .25s ease;
+    }
+
+    .chat-toggle:hover {
+      transform: scale(1.08);
+    }
+
+    .chat-panel {
+      position: fixed;
+      bottom: 92px;
+      right: 24px;
+      z-index: 600;
+      width: 320px;
+      max-width: calc(100vw - 32px);
+      height: 420px;
+      max-height: calc(100vh - 140px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(16px) scale(.97);
+      transition: all .25s ease;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .chat-panel-head {
+      background: var(--surface-2);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chat-panel-head i {
+      color: var(--teal);
+      margin-right: 6px;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-bubble {
+      max-width: 85%;
+      padding: 10px 13px;
+      border-radius: 12px;
+      font-size: .86rem;
+      line-height: 1.5;
+    }
+
+    .chat-bubble.bot {
+      background: var(--surface-2);
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 3px;
+    }
+
+    .chat-bubble.user {
+      background: var(--amber);
+      color: #0a0a12;
+      align-self: flex-end;
+      border-bottom-right-radius: 3px;
+    }
+
+    .chat-quick-replies {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .chat-chip {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      text-align: left;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .chat-chip:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
     /* ============ RESPONSIVE ============ */
     @media (max-width:860px) {
       .about-grid {
@@ -1150,6 +1341,14 @@
         margin-left: 0;
         padding-bottom: 90px;
       }
+
+      .chat-toggle {
+        bottom: 84px;
+      }
+
+      .chat-panel {
+        bottom: 152px;
+      }
     }
 
     @media (max-width:520px) {
@@ -1166,27 +1365,17 @@
         padding-top: 80px;
       }
     }
-
-    #progressBar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 3px;
-      z-index: 9999;
-      background: linear-gradient(90deg, var(--amber), var(--violet), var(--teal));
-      width: 0%;
-      transition: width .08s linear;
-      box-shadow: 0 0 12px rgba(255, 180, 84, .3);
-    }
   </style>
 </head>
 
 <body>
 
+  
   <!-- ============ SCROLL PROGRESS BAR (YAHAN DAALO) ============ -->
   <div id="progressBar"></div>
 
   <!-- ============ THEME TOGGLE ============ -->
+
   <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></div>
 
   <!-- ============ PAGE 1 : LANDING ============ -->
@@ -1534,6 +1723,31 @@
             <p><a href="resume.pdf" download>Download PDF</a></p>
           </div>
         </div>
+
+        <!-- ===== NEW: CONTACT FORM ===== -->
+        <div class="contact-form-card">
+          <div class="file-tab"><i class="fa-solid fa-paper-plane"></i> send_message.form</div>
+          <p class="form-hint">Prefer not to open your mail app? Send a message directly from here.</p>
+          <form id="contactForm">
+            <input type="hidden" name="title" value="New message from portfolio site" />
+            <div class="form-row">
+              <label class="mono" for="cf-name">NAME</label>
+              <input type="text" id="cf-name" name="name" required placeholder="Your name" />
+            </div>
+            <div class="form-row">
+              <label class="mono" for="cf-email">EMAIL</label>
+              <input type="email" id="cf-email" name="email" required placeholder="you@example.com" />
+            </div>
+            <div class="form-row">
+              <label class="mono" for="cf-message">MESSAGE</label>
+              <textarea id="cf-message" name="message" rows="4" required placeholder="Say hello..."></textarea>
+            </div>
+            <button type="submit" class="boot-btn" id="cfSubmitBtn">
+              <i class="fa-solid fa-paper-plane"></i> send_message()
+            </button>
+            <p class="form-status mono" id="cfStatus"></p>
+          </form>
+        </div>
       </div>
     </section>
 
@@ -1544,6 +1758,18 @@
           style="color:var(--amber)"></i>
       </div>
     </footer>
+  </div>
+
+  <!-- ===== NEW: FLOATING FAQ CHATBOT (visible on both pages) ===== -->
+  <div class="chat-toggle" id="chatToggle" aria-label="Open FAQ chat">
+    <i class="fa-solid fa-comment-dots"></i>
+  </div>
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-panel-head">
+      <span><i class="fa-solid fa-robot"></i> Ask about Shishupal</span>
+      <button class="chat-close" id="chatClose" aria-label="Close chat"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
   </div>
 
   <script>
@@ -1686,6 +1912,107 @@
       sections.forEach(s => observer.observe(s));
     }
 
+    /* ===== CONTACT FORM (EmailJS) =====
+       SETUP STEPS (one-time, free):
+       1. Go to https://www.emailjs.com and create a free account.
+       2. Add an "Email Service" (connect your Gmail) -> copy the SERVICE_ID.
+       3. Create an "Email Template" with variables: from_name, from_email, message
+          -> copy the TEMPLATE_ID.
+       4. Go to Account > General -> copy your PUBLIC_KEY.
+       5. Paste all three values into the constants below.
+       Until you fill these in, the form will show a friendly error instead of sending.
+    */
+    const EMAILJS_PUBLIC_KEY = '0AAswTtZ0_jkuWi9j';
+    const EMAILJS_SERVICE_ID = 'service_pt1tj0e';
+    const EMAILJS_TEMPLATE_ID = 'template_5agfhh7';
+
+    const contactForm = document.getElementById('contactForm');
+    const cfStatus = document.getElementById('cfStatus');
+    const cfSubmitBtn = document.getElementById('cfSubmitBtn');
+
+    if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    }
+
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
+        cfStatus.textContent = 'Form not configured yet — see setup comment in the code.';
+        cfStatus.className = 'form-status mono err';
+        return;
+      }
+
+      cfSubmitBtn.disabled = true;
+      cfStatus.textContent = 'Sending...';
+      cfStatus.className = 'form-status mono';
+
+      emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, contactForm)
+        .then(() => {
+          cfStatus.textContent = 'Message sent — thanks! I\'ll get back to you soon.';
+          cfStatus.className = 'form-status mono ok';
+          contactForm.reset();
+        })
+        .catch(() => {
+          cfStatus.textContent = 'Something went wrong. Please try the email link instead.';
+          cfStatus.className = 'form-status mono err';
+        })
+        .finally(() => { cfSubmitBtn.disabled = false; });
+    });
+
+    /* ===== FAQ CHATBOT ===== */
+    const faqData = [
+      { q: 'What is your experience?', a: 'I have 4+ years of experience as a Java & Spring Boot backend developer, currently working on ICMS — an insurance claims platform.' },
+      { q: 'What is your tech stack?', a: 'Java, Spring Boot, Spring Security, Hibernate/JPA, Kafka, Redis, Docker, Kubernetes, Jenkins CI/CD, AWS, and SQL databases like MySQL, MSSQL, PostgreSQL.' },
+      { q: 'What projects have you worked on?', a: 'ICMS (insurance claims microservices), BSS Procure-to-Pay for Marriott/Hyatt/Hilton, and HPH Connect — a health insurance portal.' },
+      { q: 'How can I contact you?', a: 'You can email me at shishupallohani26@gmail.com, use the contact form on this page, or reach out on LinkedIn.' },
+      { q: 'Are you open to new opportunities?', a: 'Yes, I\'m currently open to new backend developer roles. Feel free to reach out!' }
+    ];
+
+    const chatToggle = document.getElementById('chatToggle');
+    const chatPanel = document.getElementById('chatPanel');
+    const chatBody = document.getElementById('chatBody');
+    const chatClose = document.getElementById('chatClose');
+
+    function addChatBubble(text, from) {
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble ' + from;
+      bubble.textContent = text;
+      chatBody.appendChild(bubble);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function renderQuickReplies() {
+      const wrap = document.createElement('div');
+      wrap.className = 'chat-quick-replies';
+      faqData.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'chat-chip';
+        btn.textContent = item.q;
+        btn.addEventListener('click', () => {
+          addChatBubble(item.q, 'user');
+          setTimeout(() => addChatBubble(item.a, 'bot'), reduceMotion ? 0 : 400);
+        });
+        wrap.appendChild(btn);
+      });
+      chatBody.appendChild(wrap);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    let chatInitialized = false;
+    function openChat() {
+      chatPanel.classList.add('open');
+      if (!chatInitialized) {
+        addChatBubble('Hi! I\'m Shishupal\'s FAQ bot. Tap a question below to learn more about him.', 'bot');
+        renderQuickReplies();
+        chatInitialized = true;
+      }
+    }
+    chatToggle.addEventListener('click', () => {
+      chatPanel.classList.contains('open') ? chatPanel.classList.remove('open') : openChat();
+    });
+    chatClose.addEventListener('click', () => chatPanel.classList.remove('open'));
+
     window.addEventListener('scroll', function () {
       var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
       var docHeight = Math.max(
@@ -1700,5 +2027,4 @@
     });
   </script>
 </body>
-
 </html>
