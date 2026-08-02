@@ -1013,6 +1013,80 @@
       border-radius: 5px;
     }
 
+    /* --- PRODUCTS / PERSONAL BUILDS --- */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 22px;
+    }
+
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s ease, border-color .3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--violet);
+    }
+
+    .product-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--bg);
+      background: var(--violet);
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 5px;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .product-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+    }
+
+    .product-card p {
+      color: var(--text-dim);
+      font-size: .92rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .product-visit {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--violet);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      border-radius: 8px;
+      transition: border-color .25s ease, background .25s ease;
+    }
+
+    .product-visit:hover {
+      border-color: var(--violet);
+      background: rgba(139, 124, 246, .08);
+    }
+
+    .products-hint {
+      color: var(--text-dim);
+      font-size: .9rem;
+      margin-top: -8px;
+      margin-bottom: 24px;
+    }
+
     /* --- RELEASE / CONTACT --- */
     .deploy-grid {
       display: grid;
@@ -1470,6 +1544,8 @@
         </div>
         <div class="p-node" data-target="deploy"><i class="fa-solid fa-rocket"></i><span
             class="p-label mono">DEPLOY</span></div>
+        <div class="p-node" data-target="products"><i class="fa-solid fa-cubes-stacked"></i><span
+            class="p-label mono">PRODUCTS</span></div>
         <div class="p-node" data-target="release"><i class="fa-solid fa-tower-broadcast"></i><span
             class="p-label mono">RELEASE</span></div>
       </div>
@@ -1684,10 +1760,21 @@
       </div>
     </section>
 
+    <!-- PRODUCTS / PERSONAL BUILDS -->
+    <section class="stage" id="products">
+      <div class="container stage-inner">
+        <div class="stage-tag">05 — LAUNCH</div>
+        <h2>My Own <span>Products</span></h2>
+        <p class="products-hint">Self-initiated products built &amp; shipped outside of work — from idea to
+          live deployment.</p>
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </section>
+
     <!-- RELEASE / CONTACT -->
     <section class="stage" id="release">
       <div class="container stage-inner">
-        <div class="stage-tag">05 — RELEASE</div>
+        <div class="stage-tag">06 — RELEASE</div>
         <h2>Get In <span>Touch</span></h2>
         <div class="deploy-grid">
           <div class="deploy-card">
@@ -1774,6 +1861,45 @@
   <script>
     /* ===== YEAR ===== */
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ===== MY OWN PRODUCTS =====
+       To add a new product in future, just add a new object below.
+       No other HTML/CSS change is needed — the card renders automatically. */
+    const myProducts = [
+      {
+        tag: 'LIVE',
+        title: 'MrktMind AI',
+        desc: 'A self-built AI-powered marketing tool, designed and shipped independently outside of work.',
+        tech: ['AI', 'Web App', 'Netlify'],
+        url: 'https://mrktmindai.netlify.app/'
+      },
+      {
+        tag: 'LIVE',
+        title: 'Shubham Recharge',
+        desc: 'A recharge/utility web application built and deployed independently as a personal product.',
+        tech: ['Web App', 'Netlify'],
+        url: 'https://shubhamrecharge.netlify.app/'
+      }
+    ];
+
+    (function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      if (!grid) return;
+      grid.innerHTML = myProducts.map(function (p) {
+        const techRow = (p.tech || []).map(function (t) { return '<span>' + t + '</span>'; }).join('');
+        return (
+          '<div class="product-card">' +
+          '<span class="product-tag">' + p.tag + '</span>' +
+          '<h3>' + p.title + '</h3>' +
+          '<p>' + p.desc + '</p>' +
+          '<div class="tech-row">' + techRow + '</div>' +
+          '<br/>' +
+          '<a class="product-visit" href="' + p.url + '" target="_blank" rel="noopener">' +
+          '<i class="fa-solid fa-arrow-up-right-from-square"></i> Visit Product</a>' +
+          '</div>'
+        );
+      }).join('');
+    })();
 
     /* ===== REDUCED MOTION ===== */
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
